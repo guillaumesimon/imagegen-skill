@@ -8,6 +8,41 @@ It's opinionated, and that's the whole point. The skill never picks for you behi
 asks which model, which ratio, and whether you want the background gone — with the price of every
 option on the table — before it spends a single cent. 💸
 
+## 🚀 Quick start
+
+Three steps, about a minute. ⏱️
+
+**1. Install it** — in Claude Code:
+
+```bash
+git clone https://github.com/guillaumesimon/imagegen-skill ~/.claude/skills/imagegen
+```
+
+**2. Give it a key** — grab one from [fal.ai](https://fal.ai/dashboard/keys), pay per image,
+no subscription:
+
+```bash
+export FAL_KEY="your-key"
+```
+
+**3. Restart Claude Code, then just ask:**
+
+```
+Generate a hero image for the landing page, abstract gradient, dark theme
+```
+
+It asks which model, which ratio, and whether you want the background gone — every price on
+the table — then generates, saves the file and tells you what it cost. That's the whole loop. 🔁
+
+Three characters and three styles ship with it, so you can also try:
+
+```
+Fais une image de Momo sur un skateboard
+```
+
+Using the Chat tab, Cowork or claude.ai? Keeping the key out of your shell profile? Both are
+covered in [Install](#-install) and [Your key](#-your-key) further down. 👇
+
 ## 🧰 What you get
 
 ### 🪜 A five-rung model ladder
@@ -48,6 +83,36 @@ describes the grid. Not nine images glued together. 🚫🪡
 Stitched cells drift — different face, different proportions, different light — which defeats the
 entire reason you wanted a sheet. One generation, one consistent subject.
 
+### 🎭 A library of characters and styles
+
+Two folders inside the skill, one Markdown file per entry:
+
+```
+characters/momo/CHARACTER.md    styles/megadrive/STYLE.md
+characters/ines/CHARACTER.md    styles/dreamlike/STYLE.md
+characters/malik/CHARACTER.md   styles/soft-clay/STYLE.md
+```
+
+A **character** is an identity: a short description plus three to six *locked traits* copied
+word for word into every prompt. Not "brown hair" — "blunt bob at the jawline with a straight
+fringe". That's what survives from one generation to the next. 🔒
+
+A **style** is a rendering: medium, palette, light, plus an `Avoid:` line that goes in as
+negative guidance.
+
+They're two axes, so they compose. 🎲 Momo the bulldog in `megadrive`, Momo in `dreamlike`,
+Inès in `soft-clay` — any character, any style. The ones shipped in the repo are real working
+examples, and they're also a template: copy a folder, rewrite the description.
+
+Nothing is ever applied behind your back. Name a character and the skill asks whether you meant
+*that* one, then asks which style — offering the character's own first, since that's the pairing
+that reproduces best. ✅
+
+Because the library lives **inside the skill folder**, it travels with it: same entries in Claude
+Code, in the desktop app, in Cowork, on claude.ai. One caveat, stated plainly — only Claude Code
+can *write* new entries. Elsewhere the bundle is read-only, so a new character means re-zipping
+and re-uploading. 📦
+
 ### 🛡️ Format checked before you pay
 
 Aspect ratio support isn't the same across models, and GPT Image 2.5 doesn't even speak
@@ -82,9 +147,20 @@ Restart Claude Code — skills are read at startup. 🔄
 
 Want it in one project only instead of everywhere? Use `<project>/.claude/skills/imagegen/`.
 
-### Claude app, Cowork, claude.ai
+### Claude desktop app (Chat tab), Cowork, claude.ai
 
-Add it as an account skill from the skills panel in settings, pasting this repo's `SKILL.md`.
+Zip the **whole folder** and upload it as an account skill from the skills panel in settings:
+
+```bash
+cd imagegen-skill && zip -r imagegen.zip SKILL.md characters styles
+```
+
+The folder, not just `SKILL.md` — the `characters/` and `styles/` library only comes along if
+you bundle it. 🎁
+
+The desktop app is both worlds at once, and that trips people up: its **Code** tab is Claude
+Code and reads `~/.claude/skills/`, its **Chat** tab uses account skills. Installing in one does
+not install in the other. 🚪🚪
 
 ⚠️ Heads up: account skills and Claude Code's local skills directory are two separate worlds.
 Installing in one doesn't install in the other. Use both? Install in both.
@@ -165,11 +241,143 @@ Generate a product photo of the sneaker and cut out the background
 Design an A2 event poster, heavy typography, with Reve
 ```
 
+From the library — the skill confirms the character, then asks which style: 🎭
+
+```
+Fais une image de Momo sur un skateboard
+```
+
+```
+Inès in soft-clay style, waving, on a plain background
+```
+
 Spell it out up front and it skips the questions entirely: ⚡
 
 ```
 Generate a 16:9 banner with GPT Image 2.5 at high, keep the background
 ```
+
+## ➕ Adding a character or a style
+
+Two ways in, same destination. Ask the skill to do it, or write the files yourself. 🛤️
+
+### 🗣️ The fast way — just ask
+
+```
+Crée un personnage à partir de cette description : une renarde bibliothécaire, 
+lunettes en demi-lune, gilet en tweed
+```
+
+The skill runs the whole flow: it asks the usual questions, generates the sheet, writes the
+file, and tests the result. Nothing is spent before you've answered. Works in Claude Code,
+where the folder is writable.
+
+### 🧍 Adding a character by hand — 5 steps
+
+**1. Make the folder.**
+
+```bash
+mkdir -p characters/nina/refs
+```
+
+The folder name is the slug: lowercase, no spaces, no accents. It's what you'll type to
+summon them. 🏷️
+
+**2. Get a reference sheet.**
+
+One image, several views, one call — never stitch separate generations together, they drift.
+Ask for a 6-cell grid: front, three-quarter, profile, back, and two head close-ups with
+different expressions. Save it as `characters/nina/refs/sheet.png`.
+
+**3. Write `CHARACTER.md`.**
+
+```markdown
+---
+name: nina
+kind: character
+refs: [refs/sheet.png]
+ref_style: soft-clay
+locked:
+  - half-moon glasses pushed down the muzzle
+  - rust-red tweed waistcoat with brass buttons
+  - white tuft on the left ear
+---
+
+Nina is a red fox in her forties, small and precise in her movements...
+```
+
+`ref_style` records the style the *sheet* is drawn in. It can name a style that isn't in your
+library — that's fine and expected. It's what lets the skill know it has to override the
+reference's rendering when you ask for a different style. 🎨
+
+**4. Choose the locked traits.** This is the step that decides everything. 🔒
+
+Three to six, no more. A trait earns its place if it's **discriminative** and **easy to say**.
+Generic adjectives produce a different character every time:
+
+| ❌ Worthless | ✅ Reproduces |
+|---|---|
+| brown hair | blunt bob at the jawline, straight fringe |
+| wears glasses | round glasses, thin gold wire frames |
+| blue jacket | cobalt blue chore jacket over a plain white tee |
+| cute dog | right ear straight up, left ear folded forward |
+
+One trap worth naming: **don't put the style in the character.** "Cute pixel-art bulldog" welds
+the two axes together and you'll never get that dog in watercolour. The character is who they
+are; the style is how they're drawn. Keep them apart. ✂️
+
+**5. Test it before you trust it.** 🧪
+
+Regenerate the character in a pose that is **not** on the sheet. If the identity holds, the
+entry is real. If it drifts, your locked traits are too vague — rewrite them and go again.
+
+This is the step everyone skips, and it's the only one that tells you whether the entry is
+worth anything. An entry that doesn't reproduce is worse than no entry at all, because you'll
+trust it. 🕳️
+
+### 🎨 Adding a style — 2 steps
+
+Simpler, and free: a style needs no image at all.
+
+```bash
+mkdir -p styles/risograph
+```
+
+```markdown
+---
+name: risograph
+kind: style
+refs: []
+---
+
+Two-colour risograph print, fluorescent pink and deep blue overprinting into a
+muddy purple where they cross. Visible misregistration of a millimetre or so,
+coarse paper grain, ink density uneven across flat areas...
+
+Avoid: smooth gradients, photographic detail, more than three colours, clean
+registration.
+```
+
+Cover four things — **medium, palette, light, level of detail** — then close with the `Avoid:`
+line. That line is passed in as negative guidance and it does real work: it's what stops a
+style from sliding back toward generic. 🚧
+
+Want a reference image too? Drop one in `styles/risograph/refs/` and list it under `refs:`.
+Keep it to a single image: one character ref plus one style ref is two slots, which fits inside
+every model in the catalogue, Grok's three included. 🎰
+
+### 📤 Making it available everywhere
+
+Claude Code reads the folder at startup, so restart it and the new entry is live. For the
+desktop app's Chat tab, Cowork or claude.ai, re-zip and re-upload:
+
+```bash
+zip -r imagegen.zip SKILL.md characters styles
+```
+
+Entries you add are untracked files in the clone, so `git pull` will never touch them. If you
+push a fork and would rather keep your characters private, add `characters/` and `styles/` to
+`.gitignore`. 🔐
 
 ## 💰 What it costs
 
@@ -200,12 +408,22 @@ Resolution matters more on a sheet though — each cell only gets a slice of the
   sheets; Reve is the opposite problem, you pay for 4K whether you need it or not.
 - Reve is a text-to-image pick. It ranks below Nano Banana 2 at editing, so don't reach for it to
   retouch things.
+- Character identity is never pixel-perfect across generations. Locked traits and a reference
+  sheet get you a long way, but a face will shift a little from one image to the next. Plan on
+  it, especially at small sizes and in styles that simplify features away.
+- Clickable answers are a Claude Code feature. In Chat, Cowork and on claude.ai a skill can
+  only emit text, so the same questions arrive one per message, answered by typing a number.
+  Same questions, same order, one more keystroke each. ⌨️
+- Only Claude Code can write new library entries. In the desktop app's Chat tab, in Cowork and
+  on claude.ai the skill bundle is read-only: entries work, but adding one means re-zipping and
+  re-uploading the folder yourself.
 - Prices and endpoint names come from fal.ai and they move. If a parameter that used to work starts
   throwing 422, check the model pages. 📉
 
 ## 🛠️ Making it yours
 
-`SKILL.md` is the entire skill. One file, plain Markdown. Sensible things to tweak:
+`SKILL.md` is the skill itself — one file, plain Markdown — and `characters/` plus `styles/`
+are the library beside it. Sensible things to tweak:
 
 - Swap models or reorder the ladder in section 3, then fix the price tables in sections 3, 4 and 5
   to match.
@@ -213,6 +431,8 @@ Resolution matters more on a sheet though — each cell only gets a slice of the
   does the most to alter how the skill feels. 🎚️
 - Replace the default aspect ratio options with the ones you actually use.
 - Point the background removal step at a different matting model in section 9.
+- Delete the shipped characters and styles once you have your own. They're examples, not
+  furniture. 🪑
 
 ## 🙏 Credits
 

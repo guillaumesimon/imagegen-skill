@@ -95,9 +95,34 @@ Why the premium tier exists, in one line each, so the recommendation is never ha
 
 Never infer the model, the aspect ratio, the resolution or the background treatment from the
 subject matter, and never fall back to an API default. Each unanswered question is blocking.
-Use the AskUserQuestion tool when the session has it, otherwise short numbered lists.
+Use the AskUserQuestion tool when the session has it, otherwise the fallback below.
+
+If the skill folder holds a `characters/` or `styles/` library, run round 0 of section 12
+first: a library match is confirmed by the user, never applied silently.
+
+### When AskUserQuestion is not available
+
+Chat, Cowork and claude.ai have no question tool — a skill there can only emit text. The
+failure mode is dumping every question into one message and leaving the user to answer six
+things in prose. That is worse than asking nothing. Instead:
+
+- **One question per message.** Ask it, stop, wait for the answer. Never stack two questions
+  in a single turn, even when they feel related.
+- **Numbered options**, the recommended one first and marked as such, one short line each,
+  with the price where it applies.
+- **Close with the shortcut line** — "Reply with just the number." — written in the user's
+  own language. One character should be enough to move forward.
+- **Accept a compound answer** whenever it arrives ("2, 16:9, keep the background") and skip
+  every question it already covers.
+
+The number of questions does not change and none of them becomes optional. Only the delivery
+changes: one at a time, each answerable in a single keystroke.
 
 ### Round 1 — model, aspect ratio, background (one single round)
+
+"One round" means one AskUserQuestion call carrying the three questions. Without that tool it
+means three consecutive messages, one question each, per the fallback above — never the three
+of them stacked into one.
 
 **Model.** Always ask, listing the five in the order of section 3, each with its price, and
 mark Muse Image as the recommended default:
@@ -422,3 +447,109 @@ whether the background was removed and how, and the total cost including any Bri
   Banana 2 and Grok Imagine Pro are the ones to pick for photoreal detail or an alternative
   look, and GPT Image 2.5 Flare is the all-rounder when the result has to be right the first
   time.
+
+## 12. Styles and characters
+
+A small library sits next to this file:
+
+```
+characters/<name>/CHARACTER.md   + refs/
+styles/<name>/STYLE.md           + refs/
+```
+
+It travels inside the skill folder, so it behaves identically in Claude Code, in the
+desktop app, in Cowork and on claude.ai. In Claude Code the folder is writable and a new
+entry persists. Everywhere else the bundle is read only: entries can be used, but a new
+one only survives if the user re-zips the skill folder and uploads it again. Say that
+plainly instead of implying it was saved.
+
+### Round 0 — the library, before every other question
+
+Run this before round 1 of section 4. Start by listing what exists, every time:
+
+```bash
+ls characters/ styles/
+```
+
+Then match the request against those names. A match is never applied silently — the user
+confirms it, exactly like the model and the format. Ask both in one round with
+AskUserQuestion when the session has it; without it they are two separate messages, under the
+fallback rules of section 4.
+
+**Question A — the character.** Only when a name in the request matches an entry:
+
+> Found `momo` in the library — the French bulldog with mismatched ears. Use this character?
+>
+> 1. Yes, use the library entry (recommended)
+> 2. No, generate a new one from my description
+
+A name can collide by accident. The user asking for "Momo" does not necessarily mean
+*this* Momo, and a locked character quietly imposed on the wrong request is worse than an
+extra click.
+
+**Question B — the style.** Ask whenever a character was confirmed, or a style name
+matched. This is the question that matters most, because a character reference carries a
+rendering of its own and the user has to decide whether to keep it:
+
+> Which style for Momo?
+>
+> 1. `megadrive` — keep the style the character sheet is drawn in (recommended)
+> 2. `dreamlike` — pastel editorial illustration
+> 3. `soft-clay` — stylised 3D clay render
+> 4. No particular style — describe it in the prompt instead
+
+Always put the character's own `ref_style` first and mark it as the default: it is the
+combination that reproduces most reliably. List the other library styles after it, each
+with a half-line of what it is. Always keep the "no particular style" exit.
+
+When the user named both a character and a style explicitly in their request, the
+shortcut rule of section 4 applies: do not re-ask, just state what was resolved before
+generating.
+
+Nothing matched anything? Say nothing about the library and go straight to section 4.
+
+### Composing the prompt
+
+Assemble in this order:
+
+1. the character description, with every `locked` trait copied verbatim
+2. what is happening now — pose, framing, expression, background
+3. the style description
+4. the style's `Avoid:` line, as negative guidance
+
+Locked traits are copied word for word, never paraphrased, never summarised, never
+trimmed because the prompt is getting long. They are the only thing holding an identity
+together from one generation to the next.
+
+When a style and a character disagree, the character's locked traits win. The style
+governs everything else: medium, light, palette of the scene, level of detail.
+
+### References
+
+One reference per character, one per style, never more. The character reference is the
+whole sheet, not a crop: a turnaround reads as "this character from several angles" and
+costs a single slot, which keeps the pair inside the limit of every model in the
+catalogue, Grok's three included.
+
+Each character records the style its sheet was drawn in, as `ref_style`. That value may
+name a style that is not in the library — `malik` is deliberately one of those. When the
+chosen style differs from `ref_style`, the prompt must say so in as many words:
+
+> Use the reference only for the character's identity and proportions. Discard its
+> rendering entirely and draw in the style described below.
+
+Without that sentence the reference drags its own rendering into the result and the
+chosen style is quietly ignored.
+
+### Saving a new entry
+
+Only where the folder is writable.
+
+1. Generate a character sheet with section 8 — one image, several views, one call.
+2. Write `CHARACTER.md`: a short physical description, then three to six `locked` traits.
+   A trait earns its place by being discriminative and easy to say. "Brown hair" is worth
+   nothing; "blunt bob at the jawline with a straight fringe" is worth its four words.
+3. Save the sheet as `refs/sheet.png` and record `ref_style`.
+4. **Test before keeping it.** Regenerate the character in a pose that is not on the
+   sheet. If the identity does not hold, fix the locked traits and go again. An entry
+   that does not reproduce is worse than no entry at all.
