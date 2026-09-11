@@ -8,17 +8,40 @@ description: "Generate or edit images via fal.ai, from text or from reference im
 Two modes, five models, one optional cutout step. Nothing is generated before the user has
 picked the model, the format, the quality where it applies, and the background treatment.
 
-## 1. Resolve the API key (first, never ask twice)
+## 1. Resolve the API key (three sources, never ask twice)
 
 Use this prefix on every call:
 
 ```bash
 FAL_KEY="${FAL_KEY:-$(security find-generic-password -s fal.ai -a FAL_KEY -w 2>/dev/null)}"
+FAL_KEY="${FAL_KEY:-}"   # embedded fallback — paste the key between the braces
 ```
 
 Precedence: `FAL_KEY` in the environment, then the macOS Keychain when the shell runs on a
-Mac. If both come back empty, ask the user for the key once, export it for the rest of the
-session, and point them at the one-time setup below so they are not asked again:
+Mac, then the embedded fallback on the second line.
+
+### The embedded fallback
+
+It is there on purpose. Some setups reach this skill with no usable environment and no
+Keychain: a GUI-launched Claude that never sources a shell profile, Cowork, claude.ai, a
+scheduled run. For those, a key written into this file is the only thing that makes the skill
+work at all, so the line stays even when it is empty.
+
+Where to fill it in matters:
+
+- **The installed copy**, `~/.claude/skills/imagegen/SKILL.md` (or
+  `<project>/.claude/skills/imagegen/SKILL.md`), is the right place. It is not in a repo, it
+  is not shared, `chmod 600` it and it is no worse than any other dotfile holding a token.
+- **A copy that lives in a git repo** keeps the line empty. This file is plain text: it gets
+  committed, pushed, and pasted into issues. A key in there is a published key.
+
+If a call returns 401 and the key came from the embedded line, it has been revoked or has run
+out of credit: say so, ask the user for the current one, and tell them which file to update.
+
+### When all three are empty
+
+Ask the user for the key once, export it for the rest of the session, and point them at the
+one-time setup below so they are not asked again:
 
 ```bash
 # macOS, stores the key in the login Keychain (prompts for the value, nothing in shell history)
@@ -30,8 +53,8 @@ export FAL_KEY="..."
 
 (`-U` must come before `-w`, otherwise `-w` swallows it as the password value)
 
-Never print the key, never echo it into a project file, never commit it, never write it into
-generated code or config. A 401 means the key is wrong, revoked, or out of credit.
+Whichever source the key comes from, never print it, never echo it into a project file, never
+commit it, and never write it into generated code or config.
 
 ## 2. Network reality check
 

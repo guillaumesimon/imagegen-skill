@@ -91,15 +91,15 @@ Installing in one doesn't install in the other. Use both? Install in both.
 
 ## 🔑 Your key
 
-The skill checks these in order and only bothers you if both come up empty.
+Three sources, checked in this order. The skill only bothers you if all three come up empty.
 
-**Environment variable**, works anywhere:
+**1. Environment variable** 🌍 — works anywhere:
 
 ```bash
 export FAL_KEY="your-key"   # ~/.zshrc, ~/.bashrc, or a project .env
 ```
 
-**macOS Keychain**, nothing in plain text on disk, nothing in your shell history:
+**2. macOS Keychain** 🔐 — nothing in plain text on disk, nothing in your shell history:
 
 ```bash
 security add-generic-password -U -s fal.ai -a FAL_KEY -w
@@ -111,8 +111,25 @@ It prompts for the value and echoes nothing back. Check it landed:
 security find-generic-password -s fal.ai -a FAL_KEY -w
 ```
 
-🚨 Don't put your key in `SKILL.md`. It's a plain text file that gets committed, shared, and loaded
-straight into the model's context. Environment or Keychain, nowhere else.
+**3. Straight in the skill file** 📌 — the escape hatch, and it's there on purpose. A
+GUI-launched Claude, Cowork, claude.ai or a scheduled run can reach the skill with no shell
+profile and no Keychain, and then the key written into `SKILL.md` is the only thing that makes
+it work. Section 1 of the skill ends with an empty line waiting for it:
+
+```bash
+FAL_KEY="${FAL_KEY:-}"   # embedded fallback — paste the key between the braces
+```
+
+Fill that in on your **installed** copy and lock it down:
+
+```bash
+chmod 600 ~/.claude/skills/imagegen/SKILL.md
+```
+
+🚨 One rule, and it's the whole reason the line ships empty: **never fill it in on a copy that
+lives in a git repo.** `SKILL.md` is plain text — it gets committed, pushed, forked and pasted
+into issues. A key in a repo is a published key, and fal will happily bill whoever finds it.
+Installed copy: fine. This repo: empty. 🙅
 
 ## 💬 Using it
 
