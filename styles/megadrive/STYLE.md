@@ -1,7 +1,7 @@
 ---
 name: megadrive
 kind: style
-refs: []
+refs: [refs/reference.png]
 ---
 
 16-bit pixel art in the house style of early-90s Sega Mega Drive games.

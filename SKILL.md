@@ -525,10 +525,16 @@ For reference, the eleven entries and what each is for:
 | `dreamlike` | pastel editorial illustration on dream logic |
 
 Two pairs sit close together and are easy to confuse. `editorial-3d` and `soft-clay` are
-both matte clay: the first renders a whole scene for an editorial page, the second
-renders one character against a plain backdrop. `cozy-pixel` and `megadrive` are both
-pixel art: the first is warm, muted and quiet, the second is saturated, high-contrast and
-outlined. Offer the one that matches what the image has to do, not just the medium.
+both matte clay: the first is restrained and cream, diffusely lit for an editorial page
+and comfortable with a whole scene; the second is brighter and waxier, with toy
+proportions, a studio key and rim light, a gradient backdrop, and it wants a hero
+character. `cozy-pixel` and `megadrive` are both pixel art: the first is warm, muted and
+quiet, the second is saturated, high-contrast and outlined. Offer the one that matches
+what the image has to do, not just the medium.
+
+Every style now carries a reference image, and all eleven are the same scene — a corner
+flower shop — so that a library entry never smuggles in a subject. That is also why the
+sentence above about using a reference for rendering only is not optional.
 
 When the user named both a character and a style explicitly in their request, the
 shortcut rule of section 4 applies: do not re-ask, just state what was resolved before

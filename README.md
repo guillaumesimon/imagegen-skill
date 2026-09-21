@@ -100,7 +100,7 @@ word for word into every prompt. Not "brown hair" — "blunt bob at the jawline 
 fringe". That's what survives from one generation to the next. 🔒
 
 A **style** is a rendering: medium, palette, light, plus an `Avoid:` line that goes in as
-negative guidance. Eleven ship in the box, eight of them with a reference image: 🖌️
+negative guidance. Eleven ship in the box, each with a reference image: 🖌️
 
 | | Style | What it is |
 |---|---|---|
@@ -112,47 +112,27 @@ negative guidance. Eleven ship in the box, eight of them with a reference image:
 | <img src="styles/new-school-cartoon/refs/reference.png" width="150"> | `new-school-cartoon` | Thick black outlines, saturated flats, retro mascot energy |
 | <img src="styles/realistic-isometric/refs/reference.jpg" width="150"> | `realistic-isometric` | Isometric miniature on a slab, credible materials, premium |
 | <img src="styles/cozy-pixel/refs/reference.png" width="150"> | `cozy-pixel` | Warm muted pixel art, indie-game daily life |
-| *no reference* | `soft-clay` | Matte clay 3D too, but one hero character on a plain backdrop |
-| *no reference* | `megadrive` | 16-bit pixel art, saturated, high contrast, dark outlines |
-| *no reference* | `dreamlike` | Pastel editorial illustration running on dream logic |
+| <img src="styles/soft-clay/refs/reference.jpg" width="150"> | `soft-clay` | Matte clay 3D too, but character-forward and studio-lit |
+| <img src="styles/megadrive/refs/reference.png" width="150"> | `megadrive` | 16-bit pixel art, saturated, high contrast, dark outlines |
+| <img src="styles/dreamlike/refs/reference.jpg" width="150"> | `dreamlike` | Pastel editorial illustration running on dream logic |
 
-Two pairs sit deliberately close: `editorial-3d` and `soft-clay` are both matte clay, one for a
-whole scene and one for a single character; `cozy-pixel` and `megadrive` are both pixel art, one
-warm and quiet, one loud. Pick by what the image has to do, not just by the medium. 🎚️
+All eleven references are the same scene — a corner flower shop — so the column above is a
+straight comparison: one image, eleven renderings. 🔁
 
-All eight reference images are **the same scene** — a corner flower-and-coffee shop, shopkeeper
-in the doorway, striped awning, `BLOOM` sign, crates of flowers, a bicycle, a dog asleep on the
-mat. Only the rendering changes, so the table above is a like-for-like comparison: reading down
-the column is reading one image eight times. 🔁
-
-A style reference is there for the *rendering* only — the line, the palette, the texture, the
-light — and the prompt has to say so, or the reference's own subject and composition come along
-for the ride. Each one is a single image, kept at 1024px and recompressed, so all eight together
-add about 3 MB to the bundle. 🧷
-
-Seven come straight from a reference pack of eight illustration territories, each declined
-across the same five scenes. `clever-doodle` was reworked against a product-brand illustration
-register and its reference regenerated from its own `STYLE.md`, which is why that one is a
-drawing of the same shopfront rather than the pack's.
-
-Four of the eight — `realistic-isometric`, `clever-doodle`, `cut-paste`, `cozy-pixel` — were
-tested by generating from the text alone with no reference attached, which is the only way to
-find out whether a `STYLE.md` actually stands up. Two needed fixing after that. The other four
-(`playful-geometric`, `happy-riso`, `editorial-3d`, `new-school-cartoon`) are written to the
-same spec but have not been through that loop yet. 🧪
+Two pairs sit close on purpose: `editorial-3d` and `soft-clay` are both matte clay,
+`cozy-pixel` and `megadrive` are both pixel art. Pick by what the image has to do, not by the
+medium. 🎚️
 
 They're two axes, so they compose. 🎲 Momo the bulldog in `megadrive`, Momo in `dreamlike`,
-Inès in `soft-clay` — any character, any style. The ones shipped in the repo are real working
-examples, and they're also a template: copy a folder, rewrite the description.
+Inès in `soft-clay` — any character, any style. The shipped entries double as templates: copy
+a folder, rewrite the description.
 
-Nothing is ever applied behind your back. Name a character and the skill asks whether you meant
-*that* one, then asks which style — offering the character's own first, since that's the pairing
-that reproduces best. ✅
+Nothing is applied behind your back. Name a character and the skill asks whether you meant
+*that* one, then which style. ✅
 
-Because the library lives **inside the skill folder**, it travels with it: same entries in Claude
-Code, in the desktop app, in Cowork, on claude.ai. One caveat, stated plainly — only Claude Code
-can *write* new entries. Elsewhere the bundle is read-only, so a new character means re-zipping
-and re-uploading. 📦
+The library lives **inside the skill folder**, so it travels with it — same entries in Claude
+Code, the desktop app, Cowork and claude.ai. Only Claude Code can *write* new entries; the
+bundle is read-only everywhere else, so adding one there means re-zipping and re-uploading. 📦
 
 ### 🛡️ Format checked before you pay
 
@@ -407,23 +387,13 @@ line. That line is passed in as negative guidance and it does real work: it's wh
 style from sliding back toward generic. 🚧
 
 **Write for the image model, not about it.** Everything above the `Avoid:` line gets pasted
-into the prompt more or less as-is, so keep it descriptive. The moment you write "tell the model
-to…" or "otherwise it tends to…", you've written a note to whoever composes the prompt — and a
-prompt that describes the model's own failure modes is a prompt the model tries to draw. Those
-belong in an optional **`Production notes.`** paragraph after the `Avoid:` line, which the skill
-reads and acts on but never sends. 📝
+into the prompt, so keep it descriptive. "Otherwise the model tends to…" is a note to whoever
+composes the prompt, not to the model — put those in an optional `Production notes.` paragraph
+after the `Avoid:` line, which the skill reads but never sends. 📝
 
-It's worth having. Two of the shipped styles need it: `realistic-isometric` has to be told its
-camera every single time, because that never survives a reference image, and `clever-doodle` has
-to keep its accent colour opt-in or the model spends it decorating the nearest prop. 🎯
-
-Want a reference image too? Drop one in `styles/blueprint/refs/` and list it under `refs:`.
-Keep it to a single image: one character ref plus one style ref is two slots, which fits inside
-every model in the catalogue, Grok's three included. 🎰
-
-One finished image in the style is the right reference — and say in the prompt that it's there
-for the rendering only, or its subject and composition tag along. That's how the eight shipped
-style references are wired. 🧷
+Want a reference image too? Drop a single finished image in `styles/blueprint/refs/`, list it
+under `refs:`, and say in the prompt that it's there for the rendering only — otherwise its
+subject comes along for the ride. 🧷
 
 ### 📤 Making it available everywhere
 

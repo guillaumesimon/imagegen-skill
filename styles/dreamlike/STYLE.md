@@ -1,7 +1,7 @@
 ---
 name: dreamlike
 kind: style
-refs: []
+refs: [refs/reference.jpg]
 ---
 
 Editorial illustration running on dream logic — the kind of full-page image that
