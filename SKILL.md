@@ -494,13 +494,41 @@ rendering of its own and the user has to decide whether to keep it:
 > Which style for Momo?
 >
 > 1. `megadrive` — keep the style the character sheet is drawn in (recommended)
-> 2. `dreamlike` — pastel editorial illustration
-> 3. `soft-clay` — stylised 3D clay render
-> 4. No particular style — describe it in the prompt instead
+> 2. `cozy-pixel` — warm indie-game pixel art
+> 3. `editorial-3d` — matte clay editorial 3D
+> 4. Another one from the library, or none — list them
 
 Always put the character's own `ref_style` first and mark it as the default: it is the
-combination that reproduces most reliably. List the other library styles after it, each
-with a half-line of what it is. Always keep the "no particular style" exit.
+combination that reproduces most reliably. Always keep an exit that covers both the rest
+of the library and no style at all.
+
+The library holds more styles than a picker can show, so the two middle slots are a
+choice, not a listing. Pick the two nearest the request — nearest in medium first, then
+in mood — and name them with a half-line of what they are. When the exit is taken, print
+the full list as a table, one row per style with its half-line, and let the user name
+one.
+
+For reference, the eleven entries and what each is for:
+
+| Style | Register |
+| --- | --- |
+| `playful-geometric` | flat geometric shapes, no outlines, poster calm |
+| `clever-doodle` | brush-and-ink doodle, black on cream, funny |
+| `happy-riso` | risograph, four inks, grain and misregistration |
+| `editorial-3d` | matte clay editorial 3D, whole scenes |
+| `soft-clay` | matte clay 3D, single hero character render |
+| `cut-paste` | layered cut paper photographed flat |
+| `new-school-cartoon` | thick black outlines, saturated flats, mascot energy |
+| `realistic-isometric` | isometric miniature on a slab, real materials |
+| `cozy-pixel` | warm muted pixel art, indie-game daily life |
+| `megadrive` | 16-bit pixel art, saturated, dark outlines |
+| `dreamlike` | pastel editorial illustration on dream logic |
+
+Two pairs sit close together and are easy to confuse. `editorial-3d` and `soft-clay` are
+both matte clay: the first renders a whole scene for an editorial page, the second
+renders one character against a plain backdrop. `cozy-pixel` and `megadrive` are both
+pixel art: the first is warm, muted and quiet, the second is saturated, high-contrast and
+outlined. Offer the one that matches what the image has to do, not just the medium.
 
 When the user named both a character and a style explicitly in their request, the
 shortcut rule of section 4 applies: do not re-ask, just state what was resolved before
@@ -517,6 +545,12 @@ Assemble in this order:
 3. the style description
 4. the style's `Avoid:` line, as negative guidance
 
+A `STYLE.md` may close with a **Production notes** paragraph after the `Avoid:` line. That
+paragraph is addressed to you, not to the image model: it says which parts of the style have
+to be spelled out in the prompt and what goes wrong when they are not. Read it, act on it,
+and never paste it into the prompt — a prompt that tells the model what the model tends to do
+is a prompt the model tries to render.
+
 Locked traits are copied word for word, never paraphrased, never summarised, never
 trimmed because the prompt is getting long. They are the only thing holding an identity
 together from one generation to the next.
@@ -524,12 +558,23 @@ together from one generation to the next.
 When a style and a character disagree, the character's locked traits win. The style
 governs everything else: medium, light, palette of the scene, level of detail.
 
+Add one more line to every prompt in which a branded object appears — a coffee bag, a
+laptop, a shop sign, a can: no real brands, no logos, no existing product names. The
+model invents them spontaneously otherwise, and it does it on exactly the objects where
+it is hardest to notice.
+
 ### References
 
 One reference per character, one per style, never more. The character reference is the
 whole sheet, not a crop: a turnaround reads as "this character from several angles" and
 costs a single slot, which keeps the pair inside the limit of every model in the
 catalogue, Grok's three included.
+
+A style reference is one finished image in that style, and it carries a whole scene of
+its own. Say what it is for, or the scene comes along with the rendering:
+
+> Use this reference only for the rendering — medium, line, palette, texture, light.
+> Ignore its subject and composition entirely.
 
 Each character records the style its sheet was drawn in, as `ref_style`. That value may
 name a style that is not in the library — `malik` is deliberately one of those. When the

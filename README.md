@@ -34,7 +34,7 @@ Generate a hero image for the landing page, abstract gradient, dark theme
 It asks which model, which ratio, and whether you want the background gone — every price on
 the table — then generates, saves the file and tells you what it cost. That's the whole loop. 🔁
 
-Three characters and three styles ship with it, so you can also try:
+Three characters and eleven styles ship with it, so you can also try:
 
 ```
 Fais une image de Momo sur un skateboard
@@ -88,9 +88,11 @@ entire reason you wanted a sheet. One generation, one consistent subject.
 Two folders inside the skill, one Markdown file per entry:
 
 ```
-characters/momo/CHARACTER.md    styles/megadrive/STYLE.md
-characters/ines/CHARACTER.md    styles/dreamlike/STYLE.md
-characters/malik/CHARACTER.md   styles/soft-clay/STYLE.md
+characters/momo/CHARACTER.md    styles/playful-geometric/STYLE.md
+characters/ines/CHARACTER.md    styles/clever-doodle/STYLE.md
+characters/malik/CHARACTER.md   styles/happy-riso/STYLE.md
+                                styles/editorial-3d/STYLE.md
+                                ... eleven in all
 ```
 
 A **character** is an identity: a short description plus three to six *locked traits* copied
@@ -98,7 +100,38 @@ word for word into every prompt. Not "brown hair" — "blunt bob at the jawline 
 fringe". That's what survives from one generation to the next. 🔒
 
 A **style** is a rendering: medium, palette, light, plus an `Avoid:` line that goes in as
-negative guidance.
+negative guidance. Eleven ship in the box, eight of them with a reference image: 🖌️
+
+| | Style | What it is |
+|---|---|---|
+| <img src="styles/playful-geometric/refs/reference.png" width="150"> | `playful-geometric` | Flat geometric shapes, no outlines at all, poster calm |
+| <img src="styles/clever-doodle/refs/reference.png" width="150"> | `clever-doodle` | Confident brush line on empty cream, solid blacks, halftone dots, hand lettering |
+| <img src="styles/happy-riso/refs/reference.jpg" width="150"> | `happy-riso` | Risograph, four inks, grain and deliberate misregistration |
+| <img src="styles/editorial-3d/refs/reference.jpg" width="150"> | `editorial-3d` | Matte clay editorial 3D, whole scenes, soft diffuse light |
+| <img src="styles/cut-paste/refs/reference.jpg" width="150"> | `cut-paste` | Layered cut paper photographed flat, real physical shadows |
+| <img src="styles/new-school-cartoon/refs/reference.png" width="150"> | `new-school-cartoon` | Thick black outlines, saturated flats, retro mascot energy |
+| <img src="styles/realistic-isometric/refs/reference.jpg" width="150"> | `realistic-isometric` | Isometric miniature on a slab, credible materials, premium |
+| <img src="styles/cozy-pixel/refs/reference.png" width="150"> | `cozy-pixel` | Warm muted pixel art, indie-game daily life |
+| *no reference* | `soft-clay` | Matte clay 3D too, but one hero character on a plain backdrop |
+| *no reference* | `megadrive` | 16-bit pixel art, saturated, high contrast, dark outlines |
+| *no reference* | `dreamlike` | Pastel editorial illustration running on dream logic |
+
+Two pairs sit deliberately close: `editorial-3d` and `soft-clay` are both matte clay, one for a
+whole scene and one for a single character; `cozy-pixel` and `megadrive` are both pixel art, one
+warm and quiet, one loud. Pick by what the image has to do, not just by the medium. 🎚️
+
+A style reference is there for the *rendering* only — the line, the palette, the texture, the
+light — and the prompt has to say so, or the reference's own subject and composition come along
+for the ride. Each one is a single image, kept at 1024px and recompressed, so all eight together
+add about 3 MB to the bundle. 🧷
+
+The eight come from a reference pack of eight illustration territories, each declined across
+the same five scenes; `clever-doodle` was then reworked against a product-brand illustration
+register. Four of them — `realistic-isometric`, `clever-doodle`, `cut-paste`, `cozy-pixel` —
+were tested by generating from the text alone with no reference attached, which is the only way
+to find out whether a `STYLE.md` actually stands up. Two needed fixing after that. The other
+four (`playful-geometric`, `happy-riso`, `editorial-3d`, `new-school-cartoon`) are written to
+the same spec but have not been through that loop yet. 🧪
 
 They're two axes, so they compose. 🎲 Momo the bulldog in `megadrive`, Momo in `dreamlike`,
 Inès in `soft-clay` — any character, any style. The ones shipped in the repo are real working
@@ -340,31 +373,49 @@ trust it. 🕳️
 Simpler, and free: a style needs no image at all.
 
 ```bash
-mkdir -p styles/risograph
+mkdir -p styles/blueprint
 ```
 
 ```markdown
 ---
-name: risograph
+name: blueprint
 kind: style
 refs: []
 ---
 
-Two-colour risograph print, fluorescent pink and deep blue overprinting into a
-muddy purple where they cross. Visible misregistration of a millimetre or so,
-coarse paper grain, ink density uneven across flat areas...
+Architectural cyanotype: chalk-white line work on a deep Prussian blue ground,
+everything drafted at constant thin weight with visible construction lines,
+dimension arrows and a hand-lettered title block in the corner...
 
-Avoid: smooth gradients, photographic detail, more than three colours, clean
-registration.
+Avoid: colour, filled areas, soft shading, photographic detail, perspective
+blur.
+
+Production notes. The blue ground has to be named as a flat fill or the model
+reads "cyanotype" as a photographic process and returns a blurry scan.
 ```
 
 Cover four things — **medium, palette, light, level of detail** — then close with the `Avoid:`
 line. That line is passed in as negative guidance and it does real work: it's what stops a
 style from sliding back toward generic. 🚧
 
-Want a reference image too? Drop one in `styles/risograph/refs/` and list it under `refs:`.
+**Write for the image model, not about it.** Everything above the `Avoid:` line gets pasted
+into the prompt more or less as-is, so keep it descriptive. The moment you write "tell the model
+to…" or "otherwise it tends to…", you've written a note to whoever composes the prompt — and a
+prompt that describes the model's own failure modes is a prompt the model tries to draw. Those
+belong in an optional **`Production notes.`** paragraph after the `Avoid:` line, which the skill
+reads and acts on but never sends. 📝
+
+It's worth having. Two of the shipped styles need it: `realistic-isometric` has to be told its
+camera every single time, because that never survives a reference image, and `clever-doodle` has
+to keep its accent colour opt-in or the model spends it decorating the nearest prop. 🎯
+
+Want a reference image too? Drop one in `styles/blueprint/refs/` and list it under `refs:`.
 Keep it to a single image: one character ref plus one style ref is two slots, which fits inside
 every model in the catalogue, Grok's three included. 🎰
+
+One finished image in the style is the right reference — and say in the prompt that it's there
+for the rendering only, or its subject and composition tag along. That's how the eight shipped
+style references are wired. 🧷
 
 ### 📤 Making it available everywhere
 
