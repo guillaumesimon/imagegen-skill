@@ -11,7 +11,10 @@ The line is an inked brush pen, and it is confident. Weight varies only
 moderately along a stroke, tapering at the ends and thickening slightly on the
 outer contours — enough to read as hand-drawn, never enough to read as rough.
 Every stroke is laid down once and left alone: no sketch marks, no reworked
-contours, no dry-brush break-up, no tremble.
+contours, no dry-brush break-up, no tremble. Hard-edged and mechanical objects
+keep the same treatment as everything else — a bicycle frame, a shelf bracket,
+a window mullion still taper at the ends rather than flattening into even-width
+tubing.
 
 Solid black fills are the graphic anchor of the image, used on a handful of
 shapes only — hair, a pair of trousers, the inside of a mug, one filled circle
@@ -45,9 +48,14 @@ engraving, tonal hatching, soft or airbrushed shading, gradients, 3D, a full
 background scene, edge-to-edge density, realistic proportions, constant-width
 monoline, fine technical pen.
 
-Production notes. Two things have to be said in the prompt or the model drifts.
-First, the line is confident and drawn once — earlier wording about strongly
-varying thickness and a wobbly hand produced a dense scratchy woodcut. Second,
-the objects float on empty cream with no background: left to itself the model
-builds a full scene and fills every corner, which kills the register. If an
-accent colour is wanted, name it; if not, say black and white only.
+Production notes. Three things have to be said in the prompt or the model
+drifts. First, the line is confident and drawn once — earlier wording about
+strongly varying thickness and a wobbly hand produced a dense scratchy
+woodcut. Second, the objects float on empty cream with no background: left to
+itself the model builds a full scene and fills every corner, which kills the
+register. Third, name the taper on mechanical objects; without it, bike frames
+and railings come back as constant-width tubing. If an accent colour is
+wanted, name it; if not, say black and white only.
+
+On architecture, the floating rule still holds: draw the building itself in
+full, and drop the street, the sky and the neighbours.

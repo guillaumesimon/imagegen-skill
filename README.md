@@ -120,18 +120,26 @@ Two pairs sit deliberately close: `editorial-3d` and `soft-clay` are both matte 
 whole scene and one for a single character; `cozy-pixel` and `megadrive` are both pixel art, one
 warm and quiet, one loud. Pick by what the image has to do, not just by the medium. 🎚️
 
+All eight reference images are **the same scene** — a corner flower-and-coffee shop, shopkeeper
+in the doorway, striped awning, `BLOOM` sign, crates of flowers, a bicycle, a dog asleep on the
+mat. Only the rendering changes, so the table above is a like-for-like comparison: reading down
+the column is reading one image eight times. 🔁
+
 A style reference is there for the *rendering* only — the line, the palette, the texture, the
 light — and the prompt has to say so, or the reference's own subject and composition come along
 for the ride. Each one is a single image, kept at 1024px and recompressed, so all eight together
 add about 3 MB to the bundle. 🧷
 
-The eight come from a reference pack of eight illustration territories, each declined across
-the same five scenes; `clever-doodle` was then reworked against a product-brand illustration
-register. Four of them — `realistic-isometric`, `clever-doodle`, `cut-paste`, `cozy-pixel` —
-were tested by generating from the text alone with no reference attached, which is the only way
-to find out whether a `STYLE.md` actually stands up. Two needed fixing after that. The other
-four (`playful-geometric`, `happy-riso`, `editorial-3d`, `new-school-cartoon`) are written to
-the same spec but have not been through that loop yet. 🧪
+Seven come straight from a reference pack of eight illustration territories, each declined
+across the same five scenes. `clever-doodle` was reworked against a product-brand illustration
+register and its reference regenerated from its own `STYLE.md`, which is why that one is a
+drawing of the same shopfront rather than the pack's.
+
+Four of the eight — `realistic-isometric`, `clever-doodle`, `cut-paste`, `cozy-pixel` — were
+tested by generating from the text alone with no reference attached, which is the only way to
+find out whether a `STYLE.md` actually stands up. Two needed fixing after that. The other four
+(`playful-geometric`, `happy-riso`, `editorial-3d`, `new-school-cartoon`) are written to the
+same spec but have not been through that loop yet. 🧪
 
 They're two axes, so they compose. 🎲 Momo the bulldog in `megadrive`, Momo in `dreamlike`,
 Inès in `soft-clay` — any character, any style. The ones shipped in the repo are real working
