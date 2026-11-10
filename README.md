@@ -52,7 +52,7 @@ Same order every time, prices always visible, the cheap one is the default.
 | # | Model | Price per image | Reach for it when |
 |---|---|---|---|
 | 1 | 🐣 Muse Image (Meta) | $0.01 | Default. Fast, cheap, weirdly good at text, charts and QR codes inside the image |
-| 2 | 🍌 Nano Banana 2 (Google) | $0.08 at 1K → $0.16 at 4K | Photoreal detail, busy composition, or you just want 4K |
+| 2 | 🍌 Nano Banana 2.1 (Google) | $0.040 at 1K → $0.134 at 4K | Photoreal detail, busy composition, or you just want 4K |
 | 3 | 🤖 Grok Imagine Pro (xAI) | $0.05 at 1k, $0.07 at 2k | A different look, or very wide ratios |
 | 4 | 👑 GPT Image 2.6 (OpenAI) | $0.053 at `high`, $0.006 → $0.21 across the slider | It has to be right the first time. Transparent natively, 16 reference images, GIF and SVG output. Two variants at the same price: `flare` (fast all-rounder) and `sunburst` (finer detail, slower) |
 | 5 | 🖨️ Reve 2.1 | $0.25 flat | Poster-size, native 4K, and the best in-image typography of the bunch |
@@ -65,6 +65,10 @@ you unless the job actually calls for it. 🙅
 Up to 16 reference images depending on the model. Local files go inline as data URLs, so nothing
 gets shoved into some bucket first. On Reve you can even point at a specific reference from the
 prompt with `<frame>1</frame>` — handy for "the jacket from frame 1 on the model in frame 2". 🧥
+
+Nano Banana 2.1 goes further and takes a **video or a PDF** as context — a file under 15 MB or
+just a YouTube link — so "match the look of this clip" or "redraw the chart on page 3" works
+without a screenshot first. 🎬
 
 ### 🎞️ GIF and SVG, on rung 4
 
@@ -419,7 +423,8 @@ push a fork and would rather keep your characters private, add `characters/` and
 Per output image, before resolution multipliers:
 
 - 🐣 Muse Image: $0.01
-- 🍌 Nano Banana 2: $0.08 at 1K. Multipliers: 0.5K ×0.75, 2K ×1.5, 4K ×2
+- 🍌 Nano Banana 2.1: $0.040 at 1K, $0.059 at 2K, $0.134 at 4K. Token-metered, so a long prompt
+  or `thinking_level: high` adds a little, and web search is now free rather than +$0.015
 - 🤖 Grok Imagine Pro: $0.05 at 1k, $0.07 at 2k, plus $0.01 per input image when editing
 - 👑 GPT Image 2.6 at 1024²: `low` $0.006, `medium` $0.013, `high` $0.053, `xhigh` $0.094,
   `max` $0.21. At 4K: $0.011 / $0.026 / $0.10 / $0.18 / $0.40. Same prices on `flare` and
@@ -428,8 +433,9 @@ Per output image, before resolution multipliers:
 - 🖨️ Reve 2.1: $0.25, one price, always native 4K
 - ✂️ Bria background removal: $0.018 (free on GPT Image 2.6, which does it itself)
 
-Fun fact: GPT Image 2.6 at its default `high` costs **less** than Nano Banana 2 at 1K, premium tier
-or not. The scary $0.21 number is the `max` tier. 🤯
+Fun fact: rung 2 got **half price** on the way from Nano Banana 2 to 2.1 — $0.08 → $0.040 at 1K —
+which makes it cheaper than rung 3. The ladder is a ranking, not a price list, so the order stays
+put. 🤯
 
 A contact sheet is one image, so it costs the same as a single generation no matter how many cells.
 Resolution matters more on a sheet though — each cell only gets a slice of the pixels. 🔍
@@ -442,7 +448,7 @@ Resolution matters more on a sheet though — each cell only gets a slice of the
 - Past roughly 12 cells, per-cell detail on a sheet falls apart.
 - Muse Image and Reve 2.1 have no resolution control. Muse is therefore a bad pick for dense
   sheets; Reve is the opposite problem, you pay for 4K whether you need it or not.
-- Reve is a text-to-image pick. It ranks below Nano Banana 2 at editing, so don't reach for it to
+- Reve is a text-to-image pick. It ranks below Nano Banana 2.1 at editing, so don't reach for it to
   retouch things.
 - Character identity is never pixel-perfect across generations. Locked traits and a reference
   sheet get you a long way, but a face will shift a little from one image to the next. Plan on
@@ -472,7 +478,7 @@ are the library beside it. Sensible things to tweak:
 
 ## 🙏 Credits
 
-Models are served by [fal.ai](https://fal.ai): Muse Image by Meta, Nano Banana 2 by Google, Grok
+Models are served by [fal.ai](https://fal.ai): Muse Image by Meta, Nano Banana 2.1 by Google, Grok
 Imagine by xAI, GPT Image 2.6 by OpenAI, Reve 2.1 by Reve, RMBG 2.0 by Bria. This repo is just the
 skill definition.
 

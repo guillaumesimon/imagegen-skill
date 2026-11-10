@@ -69,7 +69,7 @@ and do not ask the user for a key.
 | # | Model | Text-to-image | Edit / reference | Price per output image |
 |---|---|---|---|---|
 | 1 | Muse Image (Meta) | `meta/muse-image/text-to-image` | `meta/muse-image/edit` | $0.01 |
-| 2 | Nano Banana 2 (Google) | `fal-ai/nano-banana-2` | `fal-ai/nano-banana-2/edit` | $0.08 at 1K (0.5K ×0.75, 2K ×1.5, 4K ×2) |
+| 2 | Nano Banana 2.1 (Google) | `google/nano-banana-2.1` | `google/nano-banana-2.1/edit` | $0.040 at 1K, $0.059 at 2K, $0.134 at 4K |
 | 3 | Grok Imagine Pro (xAI) | `xai/grok-imagine-image/quality/text-to-image` | `xai/grok-imagine-image/quality/edit` | $0.05 at 1k, $0.07 at 2k (+$0.01 per input image on edit) |
 | 4 | GPT Image 2.6 Flare (OpenAI) | `openai/gpt-image-2.6/flare/text-to-image` | `openai/gpt-image-2.6/flare/edit` | $0.006 to $0.21 at 1024², by `quality` (see section 4) |
 | 4b | GPT Image 2.6 Sunburst (OpenAI) | `openai/gpt-image-2.6/sunburst/text-to-image` | `openai/gpt-image-2.6/sunburst/edit` | same ladder, same prices, slower |
@@ -94,7 +94,7 @@ Why the premium tier exists, in one line each, so the recommendation is never ha
   the extra wait is acceptable. Both are one entry in the ladder, not two rungs.
 - **Reve 2.1** renders natively at 4K, about 16 megapixels, not an upscale, and is the best
   of the five at dense typography, layout and structured compositions — posters, packshots,
-  marketing material. It is a text-to-image pick: at editing it ranks below Nano Banana 2.
+  marketing material. It is a text-to-image pick: at editing it ranks below Nano Banana 2.1.
 
 ## 4. Ask before generating — mandatory, as multiple choice
 
@@ -133,7 +133,7 @@ of them stacked into one.
 mark Muse Image as the recommended default:
 
 1. Muse Image — $0.01, fastest and cheapest, strong at in-image text, charts and QR codes
-2. Nano Banana 2 — $0.08 at 1K, best for photoreal detail and complex composition, up to 4K
+2. Nano Banana 2.1 — $0.040 at 1K, best for photoreal detail and complex composition, up to 4K
 3. Grok Imagine Pro — $0.05 at 1k, alternative look, extreme wide ratios
 4. GPT Image 2.6 — $0.053 at the default `high`, best overall quality, native
    transparent background, up to 16 reference images, GIF and SVG output, quality slider
@@ -178,15 +178,16 @@ describe the subject. If they keep the background, describe the scene as usual.
 The resolution options depend on the model, so ask after round 1, and only for models 2, 3
 and 4. Present the real cost, since resolution is the main cost multiplier:
 
-- Nano Banana 2: `0.5K` ($0.06), `1K` ($0.08), `2K` ($0.12), `4K` ($0.16)
+- Nano Banana 2.1: `1K` ($0.040), `2K` ($0.059), `4K` ($0.134). There is no `0.5K` tier any
+  more, and editing adds about $0.004 for two 1K reference images
 - Grok Imagine Pro: `1k` ($0.05), `2k` ($0.07)
 - GPT Image 2.6, `quality` at 1024×1024: `low` ($0.006), `medium` ($0.013),
   `high` ($0.053, default), `xhigh` ($0.094), `max` ($0.21). At 3840×2160 the same ladder
   reads $0.011 / $0.026 / $0.10 / $0.18 / $0.40.
 
-Recommend `high` on GPT Image 2.6 unless the user asked for the best possible output: it
-already beats the rest of the catalogue and costs less than Nano Banana 2 at 1K. `max` is
-worth it for print, fine texture, or a dense contact sheet.
+Recommend `high` on GPT Image 2.6 unless the user asked for the best possible output: at
+$0.053 it sits between Nano Banana 2.1 at 1K and the same model at 2K, which is cheap for
+what it is. `max` is worth it for print, fine texture, or a dense contact sheet.
 
 On model 4, ask the variant in the same round, immediately before quality:
 
@@ -201,7 +202,7 @@ simple subject. It controls how much the model plans before rendering, independe
 
 Muse Image and Reve 2.1 have no resolution parameter: skip round 2 entirely, say so rather
 than inventing an option. Reve always renders native 4K at the flat $0.25, and if a Muse user
-then needs 2K or more, offer to switch to Nano Banana 2 or GPT Image 2.6.
+then needs 2K or more, offer to switch to Nano Banana 2.1 or GPT Image 2.6.
 
 ### Shortcuts
 
@@ -218,7 +219,7 @@ spending a call.
 | Model | Size parameter | Values | `resolution` | `num_images` | `output_format` (default) |
 |---|---|---|---|---|---|
 | Muse Image | `aspect_ratio` | `21:9` `16:9` `4:3` `3:2` `1:1` `2:3` `3:4` `9:16` `9:21` | not supported | 1-10 | `jpeg` `png` `webp` (webp) |
-| Nano Banana 2 | `aspect_ratio` | `auto` `1:1` `16:9` `9:16` `21:9` `4:3` `3:2` and extremes through `4:1`/`1:8` | `0.5K` `1K` `2K` `4K` (1K) | 1-4 | `png` `jpeg` `webp` (png) |
+| Nano Banana 2.1 | `aspect_ratio` | `auto` `21:9` `16:9` `3:2` `4:3` `5:4` `1:1` `4:5` `3:4` `2:3` `9:16` `4:1` `1:4` `8:1` `1:8` (auto) | `resolution`: `1K` `2K` `4K` (1K), plus `thinking_level`: `minimal` `medium` `high` (medium) | 1-4 | `png` `jpeg` `webp` (png) |
 | Grok Imagine Pro | `aspect_ratio` | `2:1` `20:9` `19.5:9` `16:9` `4:3` `3:2` `1:1` `2:3` `3:4` `9:16` `9:19.5` `9:20` `1:2`, plus `auto` on edit | `1k` `2k` (1k) | 1-4 | `jpeg` `png` `webp` (jpeg) |
 | GPT Image 2.6 (both variants) | `image_size` | `square_hd` `square` `landscape_4_3` `landscape_16_9` `portrait_4_3` `portrait_16_9` `auto`, or `{"width":W,"height":H}` (landscape_4_3 default on t2i, auto on edit) | `quality`: `auto` `low` `medium` `high` `xhigh` `max` (high), plus `reasoning_effort`: `low` `medium` `high` (high) | 1-10, keep 1 | `jpeg` `png` `webp` `gif` + `svg` on t2i (png) |
 | Reve 2.1 | `aspect_ratio` | `4:1` `3:1` `21:9` `2:1` `17:9` `16:9` `3:2` `4:3` `5:4` `1:1` `4:5` `3:4` `2:3` `9:16` `1:2` `1:3` `1:4` `auto` (auto) | not supported, always native 4K | 1-n, keep 1 | `png` `jpeg` `webp` (png) |
@@ -255,6 +256,18 @@ Models 2 and 3 take the same shape, with `resolution` added:
 ```bash
 -d '{"prompt":"...","aspect_ratio":"16:9","resolution":"2K","num_images":1,"output_format":"png"}'
 ```
+
+Nano Banana 2.1 has three optional knobs worth knowing, none of which needs a question:
+
+- `thinking_level`, `minimal` / `medium` / `high`, `medium` by default. It is billed as output
+  text, so it moves the price a little rather than a lot. Raise it to `high` for a dense
+  infographic or a complex composition, drop it to `minimal` when speed matters more.
+- `system_prompt`, a standing instruction that steers persona and output style across the
+  request. This is where a style from the library belongs when the same look has to hold over
+  several generations.
+- `enable_web_search`, off by default and no longer a paid extra: the results come back as
+  input tokens. Turn it on only when the image depends on something current — a real logo
+  shape, a recent event, a product that has to look right.
 
 Model 4 swaps `aspect_ratio` for `image_size` and `resolution` for `quality`. Swap `flare`
 for `sunburst` in the path when that is the variant the user picked — the body is identical:
@@ -300,8 +313,9 @@ icon, a logo, a sticker or a short loop, naming model 4 as the only one that can
 ## 7. Mode B — image to image (reference)
 
 Edit endpoints take `image_urls`, a list. Accepts HTTP(S) URLs or `data:` URLs, so a local
-reference file needs no upload. Limits: Muse 1-10 images, Nano Banana 2 up to 4, Grok up to 3,
-GPT Image 2.6 up to 16, Reve remix 1-8 (each under 10 MB).
+reference file needs no upload. Limits: Muse 1-10 images, Grok up to 3, GPT Image 2.6 up to 16,
+Reve remix 1-8 (each under 10 MB). Nano Banana 2.1 declares no cap at all, so judge it by the
+payload rather than by a number.
 
 Build the data URL (pick the right base64 flag for the platform):
 
@@ -335,8 +349,15 @@ curl -s https://fal.run/meta/muse-image/edit \
 Match the MIME type in the data URL to the real file type (`image/jpeg`, `image/webp`).
 Base64 inflates payloads by about a third, so downscale a reference over ~5 MB first.
 
-Two per-model notes on the premium tier:
+Three per-model notes:
 
+- **Nano Banana 2.1 edit** makes `image_urls` optional, because it also accepts `video_url`
+  and `pdf_url` as input context — an http(s) or data URL under 15 MB, or a YouTube link
+  passed straight through without downloading. That covers "match the look of this clip" and
+  "redraw the chart on page 3" without a frame grab or a screenshot first. It has no mask
+  parameter: for a region-level edit, say what changes in words, or use model 4. Its response
+  carries a `description` string next to `images`, which is the model narrating what it did —
+  useful when an edit comes back wrong and you need to know what it thought it was doing.
 - **GPT Image 2.6 edit** uses the same `image_size` / `quality` keys as above and defaults
   `image_size` to `auto` so the source framing is kept. It takes two ways of pointing at a
   region, never both in one call: `mask_url`, white for what to redraw and black for what to
@@ -386,7 +407,7 @@ Three things to get right:
   `9:16` for tall ones. This overrides the usual ratio question, so explain the link when
   offering the options.
 - **Resolution.** Each cell only gets a fraction of the pixels, so a sheet needs more
-  resolution than a single image. For sheets of 6 cells or more, recommend Nano Banana 2 at
+  resolution than a single image. For sheets of 6 cells or more, recommend Nano Banana 2.1 at
   `2K`/`4K`, GPT Image 2.6 at `xhigh`/`max`, or Reve 2.1, which is native 4K for a flat
   $0.25 and the strongest of the five when the cells carry labels or captions. Say plainly
   that Muse Image, with no resolution control, gives small cells on a dense sheet.
