@@ -71,7 +71,8 @@ and do not ask the user for a key.
 | 1 | Muse Image (Meta) | `meta/muse-image/text-to-image` | `meta/muse-image/edit` | $0.01 |
 | 2 | Nano Banana 2 (Google) | `fal-ai/nano-banana-2` | `fal-ai/nano-banana-2/edit` | $0.08 at 1K (0.5K ×0.75, 2K ×1.5, 4K ×2) |
 | 3 | Grok Imagine Pro (xAI) | `xai/grok-imagine-image/quality/text-to-image` | `xai/grok-imagine-image/quality/edit` | $0.05 at 1k, $0.07 at 2k (+$0.01 per input image on edit) |
-| 4 | GPT Image 2.5 Flare (OpenAI) | `openai/gpt-image-2.5/flare/text-to-image` | `openai/gpt-image-2.5/flare/edit` | $0.006 to $0.21 at 1024², by `quality` (see section 4) |
+| 4 | GPT Image 2.6 Flare (OpenAI) | `openai/gpt-image-2.6/flare/text-to-image` | `openai/gpt-image-2.6/flare/edit` | $0.006 to $0.21 at 1024², by `quality` (see section 4) |
+| 4b | GPT Image 2.6 Sunburst (OpenAI) | `openai/gpt-image-2.6/sunburst/text-to-image` | `openai/gpt-image-2.6/sunburst/edit` | same ladder, same prices, slower |
 | 5 | Reve 2.1 | `reve/2.1/text-to-image` | `reve/2.1/remix` | $0.25, flat, always native 4K |
 
 Post-processing: Bria RMBG 2.0, `fal-ai/bria/background/remove`, $0.018 per image.
@@ -84,9 +85,13 @@ scales with `num_images`, so generate 1 unless the user asked for variations.
 
 Why the premium tier exists, in one line each, so the recommendation is never hand-wavy:
 
-- **GPT Image 2.5 Flare** tops both the text-to-image and the image-editing arena
-  leaderboards. It is the only model here with a real quality/price slider, it does
-  transparent backgrounds natively (no Bria step), and it takes up to 16 reference images.
+- **GPT Image 2.6** is the only model here with a real quality/price slider, it does
+  transparent backgrounds natively (no Bria step), it takes up to 16 reference images, and it
+  is the only one that can return an animated GIF or a true SVG. Two variants share one price
+  list: **Flare** is the default all-rounder, fast, strong on layout, text and transparency;
+  **Sunburst** spends longer per image for extra fidelity on intricate detail, and scopes an
+  edit more tightly to the instruction. Pick Flare unless the job is premium visual work and
+  the extra wait is acceptable. Both are one entry in the ladder, not two rungs.
 - **Reve 2.1** renders natively at 4K, about 16 megapixels, not an upscale, and is the best
   of the five at dense typography, layout and structured compositions — posters, packshots,
   marketing material. It is a text-to-image pick: at editing it ranks below Nano Banana 2.
@@ -130,8 +135,9 @@ mark Muse Image as the recommended default:
 1. Muse Image — $0.01, fastest and cheapest, strong at in-image text, charts and QR codes
 2. Nano Banana 2 — $0.08 at 1K, best for photoreal detail and complex composition, up to 4K
 3. Grok Imagine Pro — $0.05 at 1k, alternative look, extreme wide ratios
-4. GPT Image 2.5 Flare — $0.053 at the default `high`, best overall quality, native
-   transparent background, up to 16 reference images, quality slider from $0.006 to $0.21
+4. GPT Image 2.6 — $0.053 at the default `high`, best overall quality, native
+   transparent background, up to 16 reference images, GIF and SVG output, quality slider
+   from $0.006 to $0.21. Two variants, `flare` and `sunburst`, asked in round 2
 5. Reve 2.1 — $0.25, native 4K, best in-image typography and dense layouts, text-to-image
 
 Never collapse this to a single suggestion, and never skip it because the request sounds
@@ -148,7 +154,7 @@ it is for:
 - `4:3` or `3:2` classic photo framing
 
 Fit the options to the request rather than always listing the same four, and include the one
-you would have picked so a single click is enough. GPT Image 2.5 takes named sizes rather
+you would have picked so a single click is enough. GPT Image 2.6 takes named sizes rather
 than ratios, so translate the answer using the table in section 5 — keep asking in ratios,
 the user should never have to know the enum.
 
@@ -157,14 +163,14 @@ the user should never have to know the enum.
 - Keep the background as generated
 - Remove the background, transparent PNG cutout
 
-The cost of the second option depends on the model: free on GPT Image 2.5, which does it
+The cost of the second option depends on the model: free on GPT Image 2.6, which does it
 natively with `background: "transparent"`, and +$0.018 on the other four, which need the
 extra Bria step. Say which one applies.
 
 The answer changes the prompt, so it has to come before generating, not after. If the user
 chooses removal on a model that needs Bria, add "subject isolated on a plain flat background,
 clean silhouette, no shadow cast on the ground" to the prompt: a busy background makes the
-matting worse. On GPT Image 2.5 the alpha channel comes straight out of the model, so just
+matting worse. On GPT Image 2.6 the alpha channel comes straight out of the model, so just
 describe the subject. If they keep the background, describe the scene as usual.
 
 ### Round 2 — quality, only when the chosen model has it
@@ -174,17 +180,28 @@ and 4. Present the real cost, since resolution is the main cost multiplier:
 
 - Nano Banana 2: `0.5K` ($0.06), `1K` ($0.08), `2K` ($0.12), `4K` ($0.16)
 - Grok Imagine Pro: `1k` ($0.05), `2k` ($0.07)
-- GPT Image 2.5 Flare, `quality` at 1024×1024: `low` ($0.006), `medium` ($0.013),
+- GPT Image 2.6, `quality` at 1024×1024: `low` ($0.006), `medium` ($0.013),
   `high` ($0.053, default), `xhigh` ($0.094), `max` ($0.21). At 3840×2160 the same ladder
   reads $0.011 / $0.026 / $0.10 / $0.18 / $0.40.
 
-Recommend `high` on GPT Image 2.5 unless the user asked for the best possible output: it
+Recommend `high` on GPT Image 2.6 unless the user asked for the best possible output: it
 already beats the rest of the catalogue and costs less than Nano Banana 2 at 1K. `max` is
 worth it for print, fine texture, or a dense contact sheet.
 
+On model 4, ask the variant in the same round, immediately before quality:
+
+1. `flare` — the default, fast, all-round quality (recommended)
+2. `sunburst` — extra fidelity on intricate detail, tighter edits, noticeably slower
+
+They bill identically, so the only trade is time against fine detail — say that, otherwise
+`sunburst` reads as the expensive option. Do not ask about `reasoning_effort`: leave it at
+its `high` default, and only drop it to `medium` or `low` if the user minds the latency on a
+simple subject. It controls how much the model plans before rendering, independently of
+`quality`, so it buys dense text and complex layouts rather than pixels.
+
 Muse Image and Reve 2.1 have no resolution parameter: skip round 2 entirely, say so rather
 than inventing an option. Reve always renders native 4K at the flat $0.25, and if a Muse user
-then needs 2K or more, offer to switch to Nano Banana 2 or GPT Image 2.5.
+then needs 2K or more, offer to switch to Nano Banana 2 or GPT Image 2.6.
 
 ### Shortcuts
 
@@ -203,12 +220,12 @@ spending a call.
 | Muse Image | `aspect_ratio` | `21:9` `16:9` `4:3` `3:2` `1:1` `2:3` `3:4` `9:16` `9:21` | not supported | 1-10 | `jpeg` `png` `webp` (webp) |
 | Nano Banana 2 | `aspect_ratio` | `auto` `1:1` `16:9` `9:16` `21:9` `4:3` `3:2` and extremes through `4:1`/`1:8` | `0.5K` `1K` `2K` `4K` (1K) | 1-4 | `png` `jpeg` `webp` (png) |
 | Grok Imagine Pro | `aspect_ratio` | `2:1` `20:9` `19.5:9` `16:9` `4:3` `3:2` `1:1` `2:3` `3:4` `9:16` `9:19.5` `9:20` `1:2`, plus `auto` on edit | `1k` `2k` (1k) | 1-4 | `jpeg` `png` `webp` (jpeg) |
-| GPT Image 2.5 Flare | `image_size` | `square_hd` `square` `landscape_4_3` `landscape_16_9` `portrait_4_3` `portrait_16_9` `auto`, or `{"width":W,"height":H}` (landscape_4_3 default on t2i, auto on edit) | `quality`: `auto` `low` `medium` `high` `xhigh` `max` (high) | 1-n, keep 1 | `jpeg` `png` `webp` (png) |
+| GPT Image 2.6 (both variants) | `image_size` | `square_hd` `square` `landscape_4_3` `landscape_16_9` `portrait_4_3` `portrait_16_9` `auto`, or `{"width":W,"height":H}` (landscape_4_3 default on t2i, auto on edit) | `quality`: `auto` `low` `medium` `high` `xhigh` `max` (high), plus `reasoning_effort`: `low` `medium` `high` (high) | 1-10, keep 1 | `jpeg` `png` `webp` `gif` + `svg` on t2i (png) |
 | Reve 2.1 | `aspect_ratio` | `4:1` `3:1` `21:9` `2:1` `17:9` `16:9` `3:2` `4:3` `5:4` `1:1` `4:5` `3:4` `2:3` `9:16` `1:2` `1:3` `1:4` `auto` (auto) | not supported, always native 4K | 1-n, keep 1 | `png` `jpeg` `webp` (png) |
 
 Rules:
 
-- **GPT Image 2.5 does not take `aspect_ratio`.** Sending one is a 422. Translate:
+- **GPT Image 2.6 does not take `aspect_ratio`.** Sending one is a 422. Translate:
   `1:1` → `square_hd` (1024×1024), `4:3` → `landscape_4_3`, `16:9` → `landscape_16_9`
   (1920×1080), `3:4` → `portrait_4_3`, `9:16` → `portrait_16_9`. Anything else goes through
   the custom object: width and height multiples of 16, long edge at most 3840, ratio at most
@@ -239,10 +256,11 @@ Models 2 and 3 take the same shape, with `resolution` added:
 -d '{"prompt":"...","aspect_ratio":"16:9","resolution":"2K","num_images":1,"output_format":"png"}'
 ```
 
-Model 4 swaps `aspect_ratio` for `image_size` and `resolution` for `quality`:
+Model 4 swaps `aspect_ratio` for `image_size` and `resolution` for `quality`. Swap `flare`
+for `sunburst` in the path when that is the variant the user picked — the body is identical:
 
 ```bash
-curl -s https://fal.run/openai/gpt-image-2.5/flare/text-to-image \
+curl -s https://fal.run/openai/gpt-image-2.6/flare/text-to-image \
   -H "Authorization: Key $FAL_KEY" \
   -H "Content-Type: application/json" \
   -d '{"prompt":"...","image_size":"landscape_16_9","quality":"high","num_images":1,"output_format":"png"}' \
@@ -261,11 +279,29 @@ curl -s https://fal.run/reve/2.1/text-to-image \
 
 All five return the same `{"images":[{"url":...}]}` shape.
 
+### 6a. GIF and SVG — model 4 only
+
+`output_format` on GPT Image 2.6 also takes `gif`, and on text-to-image `svg`:
+
+- **`gif`** returns one animation instead of a still. `frame_count` is 2-16 (9 by default),
+  `frame_duration_ms` 20-2000 (200 by default, rounded to 10 ms). Every frame draws on the
+  same pixel budget as a single request, so a long animation at a large `image_size` is
+  refused — lower one or the other. Describe the motion in the prompt, not just the subject.
+- **`svg`** returns real vector paths. `num_images` must be 1, `quality` then only governs
+  the raster the vectoriser traces, and `svg_model` picks that vectoriser (`gpt-6-astra` by
+  default, the larger ones give more accurate shapes). This is the only way in the catalogue
+  to get a logo or an icon as a scalable file rather than pixels.
+
+Both are metered like a still, on the same token pricing, and a GIF's frames share one pixel
+budget rather than billing as N images — but neither has a clean per-image figure like the
+table in section 4. Quote them as an estimate, say so, and offer them whenever the ask is an
+icon, a logo, a sticker or a short loop, naming model 4 as the only one that can.
+
 ## 7. Mode B — image to image (reference)
 
 Edit endpoints take `image_urls`, a list. Accepts HTTP(S) URLs or `data:` URLs, so a local
 reference file needs no upload. Limits: Muse 1-10 images, Nano Banana 2 up to 4, Grok up to 3,
-GPT Image 2.5 up to 16, Reve remix 1-8 (each under 10 MB).
+GPT Image 2.6 up to 16, Reve remix 1-8 (each under 10 MB).
 
 Build the data URL (pick the right base64 flag for the platform):
 
@@ -301,10 +337,13 @@ Base64 inflates payloads by about a third, so downscale a reference over ~5 MB f
 
 Two per-model notes on the premium tier:
 
-- **GPT Image 2.5 Flare edit** uses the same `image_size` / `quality` keys as above, defaults
-  `image_size` to `auto` so the source framing is kept, and additionally accepts `mask_url`
-  for inpainting a specific region. Editing costs a little more than the table in section 4:
-  the input images and a long prompt are billed as tokens on top of the output image.
+- **GPT Image 2.6 edit** uses the same `image_size` / `quality` keys as above and defaults
+  `image_size` to `auto` so the source framing is kept. It takes two ways of pointing at a
+  region, never both in one call: `mask_url`, white for what to redraw and black for what to
+  keep, and `markup_image_url`, a transparent PNG matching the first image's dimensions and
+  holding only annotations — circles, arrows, notes — that say what to change. Editing costs
+  a little more than the table in section 4: the input images and a long prompt are billed as
+  tokens on top of the output image.
 - **Reve 2.1 remix** lets the prompt address each reference by index with `<frame>1</frame>`,
   `<frame>2</frame>`, which is the clean way to say "the jacket from frame 1 on the model in
   frame 2".
@@ -348,7 +387,7 @@ Three things to get right:
   offering the options.
 - **Resolution.** Each cell only gets a fraction of the pixels, so a sheet needs more
   resolution than a single image. For sheets of 6 cells or more, recommend Nano Banana 2 at
-  `2K`/`4K`, GPT Image 2.5 at `xhigh`/`max`, or Reve 2.1, which is native 4K for a flat
+  `2K`/`4K`, GPT Image 2.6 at `xhigh`/`max`, or Reve 2.1, which is native 4K for a flat
   $0.25 and the strongest of the five when the cells carry labels or captions. Say plainly
   that Muse Image, with no resolution control, gives small cells on a dense sheet.
 
@@ -361,7 +400,7 @@ cut out.
 
 Run this only when the user chose removal in section 4. Two different routes:
 
-### 9a. GPT Image 2.5 Flare — native, free, no second call
+### 9a. GPT Image 2.6 — native, free, no second call
 
 Pass `background: "transparent"` and a png output on the generation itself. No Bria, no extra
 $0.018, no second round trip, and the alpha comes from the model rather than from matting, so
@@ -410,7 +449,7 @@ bill accordingly.
 
 If the matting is visibly wrong (halo, missing limb, hole in the subject), say so rather than
 delivering it silently: the usual fixes are regenerating with a plainer background, or
-switching to GPT Image 2.5 and its native transparent mode — not re-running Bria on the same
+switching to GPT Image 2.6 and its native transparent mode — not re-running Bria on the same
 input.
 
 ## 10. Save the result
@@ -425,7 +464,7 @@ mkdir -p "$(dirname assets/out.png)" && curl -sL "$URL" -o assets/out.png
 
 If the JSON has no `images` key, print the response body: it carries the API error. A 401
 means the key is wrong or revoked, a 422 means a parameter value is outside the tables above
-— on GPT Image 2.5 the usual culprit is an `aspect_ratio` that should have been an
+— on GPT Image 2.6 the usual culprit is an `aspect_ratio` that should have been an
 `image_size`.
 
 After saving, report the path, the model used, the ratio and resolution or quality tier,
@@ -437,7 +476,7 @@ whether the background was removed and how, and the total cost including any Bri
 - State colors rather than implying them.
 - For a cutout on models 1, 2, 3 and 5, ask for a plain flat background and no ground shadow,
   and avoid transparent, translucent or wispy subjects (glass, smoke, loose hair) which matte
-  badly. On GPT Image 2.5 the native transparent mode handles those far better.
+  badly. On GPT Image 2.6 the native transparent mode handles those far better.
 - For edits, describe only what should change; these models keep the rest by default. On Reve
   remix, address each reference as `<frame>N</frame>` instead of describing it in words.
 - For a sheet, put the grid, the cell count and what varies per cell in the prompt, and ask
@@ -445,7 +484,7 @@ whether the background was removed and how, and the total cost including any Bri
 - Muse Image handles text, charts and QR codes in-image well and costs a cent. Reve 2.1 is
   the one for dense typography, foreign scripts and structured layouts at poster size. Nano
   Banana 2 and Grok Imagine Pro are the ones to pick for photoreal detail or an alternative
-  look, and GPT Image 2.5 Flare is the all-rounder when the result has to be right the first
+  look, and GPT Image 2.6 is the all-rounder when the result has to be right the first
   time.
 
 ## 12. Styles and characters

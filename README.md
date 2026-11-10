@@ -54,7 +54,7 @@ Same order every time, prices always visible, the cheap one is the default.
 | 1 | 🐣 Muse Image (Meta) | $0.01 | Default. Fast, cheap, weirdly good at text, charts and QR codes inside the image |
 | 2 | 🍌 Nano Banana 2 (Google) | $0.08 at 1K → $0.16 at 4K | Photoreal detail, busy composition, or you just want 4K |
 | 3 | 🤖 Grok Imagine Pro (xAI) | $0.05 at 1k, $0.07 at 2k | A different look, or very wide ratios |
-| 4 | 👑 GPT Image 2.5 Flare (OpenAI) | $0.053 at `high`, $0.006 → $0.21 across the slider | It has to be right the first time. Tops both arena leaderboards, does transparent natively, eats 16 reference images |
+| 4 | 👑 GPT Image 2.6 (OpenAI) | $0.053 at `high`, $0.006 → $0.21 across the slider | It has to be right the first time. Transparent natively, 16 reference images, GIF and SVG output. Two variants at the same price: `flare` (fast all-rounder) and `sunburst` (finer detail, slower) |
 | 5 | 🖨️ Reve 2.1 | $0.25 flat | Poster-size, native 4K, and the best in-image typography of the bunch |
 
 Rungs 1–3 are the everyday ladder. 4 and 5 are the premium tier — the skill won't push them on
@@ -66,11 +66,17 @@ Up to 16 reference images depending on the model. Local files go inline as data 
 gets shoved into some bucket first. On Reve you can even point at a specific reference from the
 prompt with `<frame>1</frame>` — handy for "the jacket from frame 1 on the model in frame 2". 🧥
 
+### 🎞️ GIF and SVG, on rung 4
+
+GPT Image 2.6 can hand back an animated GIF (2–16 frames) or a real SVG instead of a raster, so a
+short loop or an icon comes out as the right *kind* of file. Nothing else in the ladder does
+either. 🪄
+
 ### ✂️ Background removal, two ways
 
 Ask for a cutout and you get one:
 
-- 🆓 **GPT Image 2.5** does it natively (`background: "transparent"`). No second call, no extra
+- 🆓 **GPT Image 2.6** does it natively (`background: "transparent"`). No second call, no extra
   cost, and hair and thin edges survive way better.
 - 🩹 **Everything else** goes through Bria RMBG 2.0 (+$0.018). The version *with* the background
   gets saved right next to it, so a bad matte doesn't mean paying for the generation twice.
@@ -136,7 +142,7 @@ bundle is read-only everywhere else, so adding one there means re-zipping and re
 
 ### 🛡️ Format checked before you pay
 
-Aspect ratio support isn't the same across models, and GPT Image 2.5 doesn't even speak
+Aspect ratio support isn't the same across models, and GPT Image 2.6 doesn't even speak
 `aspect_ratio` — it wants named `image_size` values. The skill validates your pick against the
 model you chose and offers the nearest supported value, instead of eating a 422 or quietly
 falling back to something you never asked for. 🎯
@@ -275,7 +281,7 @@ Inès in soft-clay style, waving, on a plain background
 Spell it out up front and it skips the questions entirely: ⚡
 
 ```
-Generate a 16:9 banner with GPT Image 2.5 at high, keep the background
+Generate a 16:9 banner with GPT Image 2.6 at high, keep the background
 ```
 
 ## ➕ Adding a character or a style
@@ -415,14 +421,15 @@ Per output image, before resolution multipliers:
 - 🐣 Muse Image: $0.01
 - 🍌 Nano Banana 2: $0.08 at 1K. Multipliers: 0.5K ×0.75, 2K ×1.5, 4K ×2
 - 🤖 Grok Imagine Pro: $0.05 at 1k, $0.07 at 2k, plus $0.01 per input image when editing
-- 👑 GPT Image 2.5 Flare at 1024²: `low` $0.006, `medium` $0.013, `high` $0.053, `xhigh` $0.094,
-  `max` $0.21. At 4K: $0.011 / $0.026 / $0.10 / $0.18 / $0.40. Edits bill the input images and a
-  long prompt on top.
+- 👑 GPT Image 2.6 at 1024²: `low` $0.006, `medium` $0.013, `high` $0.053, `xhigh` $0.094,
+  `max` $0.21. At 4K: $0.011 / $0.026 / $0.10 / $0.18 / $0.40. Same prices on `flare` and
+  `sunburst` — the variant costs time, not money. Edits bill the input images and a long prompt
+  on top, and GIF and SVG are metered the same way without a tidy per-image figure.
 - 🖨️ Reve 2.1: $0.25, one price, always native 4K
-- ✂️ Bria background removal: $0.018 (free on GPT Image 2.5, which does it itself)
+- ✂️ Bria background removal: $0.018 (free on GPT Image 2.6, which does it itself)
 
-Fun fact: GPT Image 2.5 at its default `high` costs **less** than Nano Banana 2 at 1K while sitting
-above it on both leaderboards. The scary $0.21 number is the `max` tier. 🤯
+Fun fact: GPT Image 2.6 at its default `high` costs **less** than Nano Banana 2 at 1K, premium tier
+or not. The scary $0.21 number is the `max` tier. 🤯
 
 A contact sheet is one image, so it costs the same as a single generation no matter how many cells.
 Resolution matters more on a sheet though — each cell only gets a slice of the pixels. 🔍
@@ -466,7 +473,7 @@ are the library beside it. Sensible things to tweak:
 ## 🙏 Credits
 
 Models are served by [fal.ai](https://fal.ai): Muse Image by Meta, Nano Banana 2 by Google, Grok
-Imagine by xAI, GPT Image 2.5 by OpenAI, Reve 2.1 by Reve, RMBG 2.0 by Bria. This repo is just the
+Imagine by xAI, GPT Image 2.6 by OpenAI, Reve 2.1 by Reve, RMBG 2.0 by Bria. This repo is just the
 skill definition.
 
 Built by [Guillaume Simon](https://guillaumesimon.app). 👋
